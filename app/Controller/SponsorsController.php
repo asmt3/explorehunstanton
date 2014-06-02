@@ -1,44 +1,25 @@
 <?php
-/**
- * Static content controller.
- *
- * This file will render views from views/pages/
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Controller
- * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
 App::uses('AppController', 'Controller');
-
 /**
- * Static content controller
+ * Sponsors Controller
  *
- * Override this controller by placing a copy in controllers directory of an application
- *
- * @package       app.Controller
- * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @property Sponsor $Sponsor
+ * @property PaginatorComponent $Paginator
+ * @property SessionComponent $Session
  */
 class SponsorsController extends AppController {
 
 /**
- * This controller does not use a model
+ * Components
  *
  * @var array
  */
+	public $components = array('Paginator', 'Session');
 	public $uses = array('Sponsor', 'Event');
-	public $layout = 'skin';
 
 	public function rotate() {
+
+		$this->layout = 'skin';
 
 		$sponsor = $this->Sponsor->getSponsorOnRotation();
 
@@ -47,7 +28,9 @@ class SponsorsController extends AppController {
 		$this->set(compact('sponsor', 'events'));
 	}
 
-	public function view($sponsor_id) {
+	public function view($sponsor_id =  null) {
+
+		$this->layout = 'skin';
 
 		$sponsor = $this->Sponsor->findById($sponsor_id);
 
@@ -56,5 +39,93 @@ class SponsorsController extends AppController {
 		$this->set(compact('sponsor', 'events'));
 
 		$this->render('rotate');
+	}
+
+
+/**
+ * admin_index method
+ *
+ * @return void
+ */
+	public function admin_index() {
+		$this->Sponsor->recursive = 0;
+		$this->set('sponsors', $this->Paginator->paginate());
+	}
+
+/**
+ * admin_view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_view($id = null) {
+		if (!$this->Sponsor->exists($id)) {
+			throw new NotFoundException(__('Invalid sponsor'));
+		}
+		$options = array('conditions' => array('Sponsor.' . $this->Sponsor->primaryKey => $id));
+		$this->set('sponsor', $this->Sponsor->find('first', $options));
+	}
+
+/**
+ * admin_add method
+ *
+ * @return void
+ */
+	public function admin_add() {
+		if ($this->request->is('post')) {
+			$this->Sponsor->create();
+			if ($this->Sponsor->save($this->request->data)) {
+				$this->Session->setFlash(__('The sponsor has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The sponsor could not be saved. Please, try again.'));
+			}
+		}
+	}
+
+/**
+ * admin_edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_edit($id = null) {
+		if (!$this->Sponsor->exists($id)) {
+			throw new NotFoundException(__('Invalid sponsor'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Sponsor->save($this->request->data)) {
+				$this->Session->setFlash(__('The sponsor has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The sponsor could not be saved. Please, try again.'));
+			}
+		} else {
+			$options = array('conditions' => array('Sponsor.' . $this->Sponsor->primaryKey => $id));
+			$this->request->data = $this->Sponsor->find('first', $options);
+		}
+	}
+
+/**
+ * admin_delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function admin_delete($id = null) {
+		$this->Sponsor->id = $id;
+		if (!$this->Sponsor->exists()) {
+			throw new NotFoundException(__('Invalid sponsor'));
+		}
+		$this->request->allowMethod('post', 'delete');
+		if ($this->Sponsor->delete()) {
+			$this->Session->setFlash(__('The sponsor has been deleted.'));
+		} else {
+			$this->Session->setFlash(__('The sponsor could not be deleted. Please, try again.'));
+		}
+		return $this->redirect(array('action' => 'index'));
 	}
 }
