@@ -21,14 +21,14 @@ class Event extends AppModel {
 		$thisMorning = new Datetime();
 		$thisMorning->setTime(0,0,0);
 
-		// + 7 days from now
-		$nextWeek = clone $thisMorning;
-		$nextWeek->modify("+8 days");
+		// + 1 month from now
+		$nextMonth = clone $thisMorning;
+		$nextMonth->modify("+1 month");
 
 		$events = $this->find("all", array(
 			'conditions' => array(
 				'start >' => $thisMorning->format('Y-m-d H:i:s'),
-				'start <=' => $nextWeek->format('Y-m-d H:i:s'),
+				'start <=' => $nextMonth->format('Y-m-d H:i:s'),
 			),
 			'order' => array('start ASC')
 		));
