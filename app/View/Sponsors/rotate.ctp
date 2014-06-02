@@ -82,7 +82,7 @@
 
 <? foreach($events as $event): ?>
     <li>
-        <h3><?php echo $this->Time->nice($event['Event']['start']) ?></h3>
+        <h3><?php echo $this->Time->nice($event['Event']['start'], NULL, '%a, %b %eS %Y, %l:%M %p') ?></h3>
         <h4><?php echo $event['Event']['title']?></h4>
         <h5><?php echo $event['Event']['location_name']?></h5>
         <p><?php echo $event['Event']['description']?></p>
