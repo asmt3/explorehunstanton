@@ -22,7 +22,7 @@
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		ExploreHunstantonAdmin
+		ExploreHunstanton
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
