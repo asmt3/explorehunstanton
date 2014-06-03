@@ -16,6 +16,22 @@ class EventsController extends AppController {
  */
 	public $components = array('Paginator', 'Session');
 
+
+
+	public function add() {
+		if ($this->request->is('post')) {
+			$this->Event->create();
+			if ($this->Event->save($this->request->data)) {
+				$this->Session->setFlash(__('The event has been saved.'));
+				return $this->redirect(array('action' => 'add'));
+			} else {
+				$this->Session->setFlash(__('The event could not be saved. Please, try again.'));
+			}
+		}
+	}
+
+
+
 /**
  * admin_index method
  *

@@ -29,6 +29,7 @@ class Event extends AppModel {
 			'conditions' => array(
 				'start >' => $thisMorning->format('Y-m-d H:i:s'),
 				'start <=' => $nextMonth->format('Y-m-d H:i:s'),
+				'approved' => true,
 			),
 			'order' => array('start ASC')
 		));
