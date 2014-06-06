@@ -4,6 +4,7 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
+			<th><?php echo $this->Paginator->sort('telephone'); ?></th>
 			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -11,6 +12,7 @@
 	<tr>
 		<td><?php echo h($sponsor['Sponsor']['id']); ?>&nbsp;</td>
 		<td><?php echo h($sponsor['Sponsor']['name']); ?>&nbsp;</td>
+		<td><?php echo h($sponsor['Sponsor']['telephone']); ?>&nbsp;</td>
 		<td><?php echo h($sponsor['Sponsor']['created']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $sponsor['Sponsor']['id'])); ?>
